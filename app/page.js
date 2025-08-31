@@ -1,103 +1,426 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
+import {
+  Search,
+  Bell,
+  Settings,
+  User,
+  Cog,
+  Leaf,
+  Rocket,
+  Users,
+  FileText,
+  DollarSign,
+  Target,
+} from "lucide-react"
+import {
+  ComposedChart,
+  Bar,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+} from "recharts"
+
+const adsData = [
+  { month: "01 Jan", greenBars: 430, orangeBars: 0, line: 32 },
+  { month: "02 Jan", greenBars: 520, orangeBars: 0, line: 42 },
+  { month: "03 Jan", greenBars: 0, orangeBars: 410, line: 35 },
+  { month: "04 Jan", greenBars: 680, orangeBars: 0, line: 45 },
+  { month: "05 Jan", greenBars: 0, orangeBars: 220, line: 28 },
+  { month: "06 Jan", greenBars: 410, orangeBars: 0, line: 35 },
+  { month: "07 Jan", greenBars: 0, orangeBars: 180, line: 18 },
+  { month: "08 Jan", greenBars: 350, orangeBars: 0, line: 30 },
+  { month: "09 Jan", greenBars: 750, orangeBars: 0, line: 25 },
+  { month: "10 Jan", greenBars: 0, orangeBars: 320, line: 22 },
+  { month: "11 Jan", greenBars: 0, orangeBars: 250, line: 15 },
+  { month: "12 Jan", greenBars: 0, orangeBars: 180, line: 12 },
+]
+
+const leadData = [
+  { point: 1, value: 32 },
+  { point: 2, value: 45 },
+  { point: 3, value: 38 },
+  { point: 4, value: 48 },
+  { point: 5, value: 42 },
+  { point: 6, value: 50 },
+  { point: 7, value: 45 },
+  { point: 8, value: 48 },
+]
+
+const campaignsData = [
+  {
+    id: 1,
+    name: "Summer Sale",
+    type: "Promotional",
+    status: "Completed",
+    budget: "$20,000",
+    conversions: "50%",
+    start: "21 Aug 2025",
+    end: "03 Sep 2025",
+    active: false,
+    icon: Cog,
+  },
+  {
+    id: 2,
+    name: "Back-to-School Promo",
+    type: "Seasonal",
+    status: "Active",
+    budget: "$15,000",
+    conversions: "35%",
+    start: "26 Aug 2025",
+    end: "04 Sep 2025",
+    active: true,
+    icon: Leaf,
+  },
+  {
+    id: 3,
+    name: "New Product Launch",
+    type: "Seasonal",
+    status: "Active",
+    budget: "$30,000",
+    conversions: "60%",
+    start: "29 Aug 2025",
+    end: "06 Sep 2025",
+    active: true,
+    icon: Leaf,
+  },
+  {
+    id: 4,
+    name: "Holiday Gift Guide",
+    type: "Launch",
+    status: "Scheduled",
+    budget: "$50,000",
+    conversions: "0%",
+    start: "26 Aug 2025",
+    end: "04 Sep 2025",
+    active: false,
+    icon: Rocket,
+  },
+  {
+    id: 5,
+    name: "Clearance Sale",
+    type: "Promotional",
+    status: "Active",
+    budget: "$10,000",
+    conversions: "20%",
+    start: "26 Aug 2025",
+    end: "04 Sep 2025",
+    active: true,
+    icon: Cog,
+  },
+]
+
+export default function DashboardPage() {
+  const [chartFilter, setChartFilter] = useState("All") // "All", "Campaign", "Email"
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-200">
+        
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        {/* Dashboard Content */}
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">KPI summary</h1>
+
+            {/* KPI Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">
+                    Total marketing spend
+                  </CardTitle>
+                  <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
+                    <Users className="w-4 h-4 text-pink-600" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">$192,817</div>
+                  <p className="text-xs text-green-600">+5.3% vs last month</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">
+                    ROI
+                  </CardTitle>
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-blue-600" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">270%</div>
+                  <p className="text-xs text-green-600">+8.1% vs last month</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">
+                    Conversion rates
+                  </CardTitle>
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <DollarSign className="w-4 h-4 text-green-600" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">4.5%</div>
+                  <p className="text-xs text-green-600">+0.9% vs last month</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-600">
+                    Total leads
+                  </CardTitle>
+                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                    <Target className="w-4 h-4 text-purple-600" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">1,289</div>
+                  <p className="text-xs text-green-600">+16.2% vs last month</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              {/* Ads performance */}
+              <Card className="lg:col-span-2">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-xl font-bold">Ads performance</CardTitle>
+                  <div className="flex space-x-4">
+                    {["All", "Campaign", "Email"].map((type) => (
+                      <Button
+                        key={type}
+                        variant={chartFilter === type ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setChartFilter(type)}
+                      >
+                        {type}
+                      </Button>
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      {chartFilter === "Email" ? (
+                        <ComposedChart data={adsData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                          <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                          <YAxis axisLine={false} tickLine={false} />
+                          <Line
+                            type="monotone"
+                            dataKey="line"
+                            stroke="#3b82f6"
+                            strokeWidth={2}
+                            dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                          />
+                        </ComposedChart>
+                      ) : (
+                        <ComposedChart data={adsData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                          <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                          <YAxis axisLine={false} tickLine={false} />
+                          <Bar dataKey="greenBars" fill="#C8ECD9" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="orangeBars" fill="#FFC58F" radius={[4, 4, 0, 0]} />
+                          {chartFilter === "All" && (
+                            <Line
+                              type="monotone"
+                              dataKey="line"
+                              stroke="#3b82f6"
+                              strokeWidth={2}
+                              dot={{ fill: "#3b82f6", strokeWidth: 2, r: 0 }}
+                            />
+                          )}
+                        </ComposedChart>
+                      )}
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Lead Performance */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Lead performance score</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-40 mb-6">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={leadData}>
+                        <defs>
+                          <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
+                          </linearGradient>
+                        </defs>
+                        <XAxis hide />
+                        <YAxis hide />
+                        <Area
+                          type="monotone"
+                          dataKey="value"
+                          stroke="#3b82f6"
+                          strokeWidth={3}
+                          fill="url(#colorBlue)"
+                          dot={{ fill: "#3b82f6", strokeWidth: 2, r: 5 }}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Lead Metrics */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-gray-900">1</span>
+                        <span className="text-sm text-gray-600">Lead Volume</span>
+                      </div>
+                      <Badge className="bg-green-100 text-green-700">78%</Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-gray-900">2</span>
+                        <span className="text-sm text-gray-600">Conversion Rate</span>
+                      </div>
+                      <Badge className="bg-orange-100 text-orange-700">57%</Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-gray-900">3</span>
+                        <span className="text-sm text-gray-600">Lead Quality</span>
+                      </div>
+                      <Badge className="bg-red-100 text-red-700">26%</Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-gray-900">4</span>
+                        <span className="text-sm text-gray-600">Response Time</span>
+                      </div>
+                      <Badge className="bg-green-100 text-green-700">76%</Badge>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-gray-900">5</span>
+                        <span className="text-sm text-gray-600">Cost per Lead</span>
+                      </div>
+                      <Badge className="bg-orange-100 text-orange-700">42%</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Campaigns */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl font-bold">Campaigns</CardTitle>
+                  <Button variant="outline" size="sm">
+                    Create campaign
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          Campaign
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          Budget
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          Conversions
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          Start
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 uppercase tracking-wider">
+                          End
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {campaignsData.map((campaign) => {
+                        const IconComponent = campaign.icon
+                        return (
+                          <tr key={campaign.id} className="hover:bg-gray-50">
+                            <td className="py-4 px-4">
+                              <div className="flex items-center space-x-3">
+                                <Switch checked={campaign.active} />
+                                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                  <IconComponent className="h-4 w-4 text-gray-600" />
+                                </div>
+                                <div>
+                                  <div className="font-medium text-gray-900">
+                                    {campaign.name}
+                                  </div>
+                                  <div className="text-sm text-gray-500">
+                                    {campaign.type}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <Badge
+                                className={
+                                  campaign.status === "Completed"
+                                    ? "bg-green-100 text-green-800"
+                                    : campaign.status === "Active"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-orange-100 text-orange-800"
+                                }
+                              >
+                                {campaign.status}
+                              </Badge>
+                            </td>
+                            <td className="py-4 px-4 text-gray-900">
+                              {campaign.budget}
+                            </td>
+                            <td className="py-4 px-4 text-gray-900">
+                              {campaign.conversions}
+                            </td>
+                            <td className="py-4 px-4 text-gray-500">
+                              {campaign.start}
+                            </td>
+                            <td className="py-4 px-4 text-gray-500">
+                              {campaign.end}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+
+
+  )
 }
