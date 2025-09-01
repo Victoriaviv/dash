@@ -120,7 +120,7 @@ const campaignsData = [
 ]
 
 export default function DashboardPage() {
-  const [chartFilter, setChartFilter] = useState("All") 
+  const [chartFilter, setChartFilter] = useState("All") // "All", "Campaign", "Email"
 
   return (
   
