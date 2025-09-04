@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import {
@@ -25,9 +27,9 @@ const navigationItems = [
   {
     title: "DASHBOARD",
     items: [
-      { name: "Ecommerce", icon: ShoppingCart, href: "/ecommerce" },
+      { name: "Ecommerce", icon: ShoppingCart, href: "/Ecommerce" },
       { name: "Project", icon: FolderOpen, href: "/project" },
-      { name: "Marketing", icon: TrendingUp, href: "/marketing", active: true },
+      { name: "Marketing", icon: TrendingUp, href: "/marketing" },
       { name: "Analytic", icon: BarChart3, href: "/analytics" },
     ],
   },
@@ -55,11 +57,14 @@ const navigationItems = [
 ]
 
 export function Sidebar() {
+  const pathname = usePathname()
   const [expandedItems, setExpandedItems] = useState([])
 
   const toggleExpanded = (itemName) => {
     setExpandedItems((prev) =>
-      prev.includes(itemName) ? prev.filter((name) => name !== itemName) : [...prev, itemName]
+      prev.includes(itemName)
+        ? prev.filter((name) => name !== itemName)
+        : [...prev, itemName]
     )
   }
 
@@ -80,17 +85,40 @@ export function Sidebar() {
         {navigationItems.map((section) => (
           <div key={section.title} className="mb-6">
             <div className="px-6 mb-2">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{section.title}</h3>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                {section.title}
+              </h3>
             </div>
             <nav className="space-y-1 px-3">
-              {section.items.map((item) => (
-                <div key={item.name}>
-                  <Button
-                    variant="ghost"
+              {section.items.map((item) => {
+                const isActive = pathname === item.href
+                return item.href ? (
+                  <Link
+                    key={item.name}
+                    href={item.href}
                     className={cn(
-                      "w-full justify-start h-10 px-3 text-sm font-medium",
-                      item.active ? "bg-blue-50 text-blue-700 hover:bg-blue-100" : "text-gray-700 hover:bg-gray-100"
+                      "w-full flex items-center h-10 px-3 text-sm font-medium rounded-md",
+                      isActive
+                        ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
+                        : "text-gray-700 hover:bg-gray-100"
                     )}
+                  >
+                    <item.icon className="mr-3 h-4 w-4" />
+                    <span className="flex-1 text-left">{item.name}</span>
+                    {item.hasSubmenu && (
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 transition-transform",
+                          expandedItems.includes(item.name) && "rotate-180"
+                        )}
+                      />
+                    )}
+                  </Link>
+                ) : (
+                  <Button
+                    key={item.name}
+                    variant="ghost"
+                    className="w-full justify-start h-10 px-3 text-sm font-medium"
                     onClick={() => item.hasSubmenu && toggleExpanded(item.name)}
                   >
                     <item.icon className="mr-3 h-4 w-4" />
@@ -104,8 +132,8 @@ export function Sidebar() {
                       />
                     )}
                   </Button>
-                </div>
-              ))}
+                )
+              })}
             </nav>
           </div>
         ))}

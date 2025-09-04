@@ -20,8 +20,10 @@ import {
 } from "lucide-react"
 import {
   ComposedChart,
+  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   Bar,
   Line,
+  LineChart,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -45,17 +47,88 @@ const adsData = [
   { month: "12 Jan", greenBars: 0, orangeBars: 180, line: 12 },
 ]
 
-const leadData = [
-  { point: 1, value: 32 },
-  { point: 2, value: 45 },
-  { point: 3, value: 38 },
-  { point: 4, value: 48 },
-  { point: 5, value: 42 },
-  { point: 6, value: 50 },
-  { point: 7, value: 45 },
-  { point: 8, value: 48 },
-]
-
+// const data = [
+//   {
+//     name: 'Page A',
+//     uv: 4000,
+//     pv: 2400,
+//     amt: 2400,
+//   },
+//   {
+//     name: 'Page B',
+//     uv: 3000,
+//     pv: 1398,
+//     amt: 2210,
+//   },
+//   {
+//     name: 'Page C',
+//     uv: 2000,
+//     pv: 9800,
+//     amt: 2290,
+//   },
+//   {
+//     name: 'Page D',
+//     uv: 2780,
+//     pv: 3908,
+//     amt: 2000,
+//   },
+//   {
+//     name: 'Page E',
+//     uv: 1890,
+//     pv: 4800,
+//     amt: 2181,
+//   },
+//   {
+//     name: 'Page F',
+//     uv: 2390,
+//     pv: 3800,
+//     amt: 2500,
+//   },
+//   {
+//     name: 'Page G',
+//     uv: 3490,
+//     pv: 4300,
+//     amt: 2100,
+//   },
+// ];
+const data = [
+  {
+    subject: '1',
+    A: 120,
+    B: 110,
+    fullMark: 150,
+  },
+  {
+    subject: '2',
+    A: 98,
+    B: 130,
+    fullMark: 150,
+  },
+  {
+    subject: '3',
+    A: 86,
+    B: 130,
+    fullMark: 150,
+  },
+  {
+    subject: '4',
+    A: 99,
+    B: 100,
+    fullMark: 150,
+  },
+  {
+    subject: '5',
+    A: 85,
+    B: 90,
+    fullMark: 150,
+  },
+  {
+    subject: '6',
+    A: 65,
+    B: 85,
+    fullMark: 150,
+  },
+];
 const campaignsData = [
   {
     id: 1,
@@ -120,11 +193,11 @@ const campaignsData = [
 ]
 
 export default function DashboardPage() {
-  const [chartFilter, setChartFilter] = useState("All") // "All", "Campaign", "Email"
+  const [chartFilter, setChartFilter] = useState("All") 
 
   return (
   
-      <div className="flex-1 flex flex-col overflow-hidden bg-gray-200">
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-100">
         
 
         {/* Dashboard Content */}
@@ -218,18 +291,9 @@ export default function DashboardPage() {
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       {chartFilter === "Email" ? (
-                        <ComposedChart data={adsData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                          <XAxis dataKey="month" axisLine={false} tickLine={false} />
-                          <YAxis axisLine={false} tickLine={false} />
-                          <Line
-                            type="monotone"
-                            dataKey="line"
-                            stroke="#3b82f6"
-                            strokeWidth={2}
-                            dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
-                          />
-                        </ComposedChart>
+                        <LineChart width={300} height={100} data={data}>
+                        <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeWidth={2} />
+                      </LineChart>
                       ) : (
                         <ComposedChart data={adsData}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -260,26 +324,14 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="h-40 mb-6">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={leadData}>
-                        <defs>
-                          <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
-                          </linearGradient>
-                        </defs>
-                        <XAxis hide />
-                        <YAxis hide />
-                        <Area
-                          type="monotone"
-                          dataKey="value"
-                          stroke="#3b82f6"
-                          strokeWidth={3}
-                          fill="url(#colorBlue)"
-                          dot={{ fill: "#3b82f6", strokeWidth: 2, r: 5 }}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                  <ResponsiveContainer width="100%" height="100%">
+        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+          <PolarGrid />
+          <PolarAngleAxis dataKey="subject" />
+          <PolarRadiusAxis />
+          <Radar name="Mike" dataKey="A" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+        </RadarChart>
+      </ResponsiveContainer>
                   </div>
 
                   {/* Lead Metrics */}
