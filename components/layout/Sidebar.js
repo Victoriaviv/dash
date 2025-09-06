@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   ShoppingCart,
   FolderOpen,
@@ -21,7 +21,7 @@ import {
   Mail,
   MessageCircle,
   ChevronDown,
-} from "lucide-react"
+} from "lucide-react";
 
 const navigationItems = [
   {
@@ -36,12 +36,31 @@ const navigationItems = [
   {
     title: "CONCEPTS",
     items: [
-      { name: "AI", icon: Brain, href: "/ai", hasSubmenu: true },
-      { name: "Projects", icon: FolderOpen, href: "/projects", hasSubmenu: true },
-      { name: "Customer", icon: Users, href: "/customer", hasSubmenu: true },
-      { name: "Products", icon: Package, href: "/products", hasSubmenu: true },
-      { name: "Orders", icon: ShoppingBag, href: "/orders", hasSubmenu: true },
-      { name: "Account", icon: User, href: "/account", hasSubmenu: true },
+      { name: "AI", icon: Brain, href: "/ai" },
+      { name: "Projects", icon: FolderOpen, href: "/projects" },
+      { name: "Customer", icon: Users, href: "/customer" },
+      {
+        name: "Products",
+        icon: Package,
+        hasSubmenu: true,
+        submenu: [
+          { name: "List", href: "/products/list" },
+          { name: "Create", href: "/products/create" },
+          { name: "Edit", href: "/products/edit" },
+        ],
+      },
+      {
+        name: "Orders",
+        icon: Package,
+        hasSubmenu: true,
+        submenu: [
+          { name: "List", href: "/order/list" },
+          { name: "Create", href: "/order/create" },
+          { name: "Edit", href: "/order/edit" },
+          {name:"Detail",href:"/order/detail"}
+        ],
+      },
+      { name: "Account", icon: User, href: "/account" },
     ],
   },
   {
@@ -54,19 +73,19 @@ const navigationItems = [
       { name: "Chat", icon: MessageCircle, href: "/chat" },
     ],
   },
-]
+];
 
 export function Sidebar() {
-  const pathname = usePathname()
-  const [expandedItems, setExpandedItems] = useState([])
+  const pathname = usePathname();
+  const [expandedItems, setExpandedItems] = useState([]);
 
   const toggleExpanded = (itemName) => {
     setExpandedItems((prev) =>
       prev.includes(itemName)
         ? prev.filter((name) => name !== itemName)
         : [...prev, itemName]
-    )
-  }
+    );
+  };
 
   return (
     <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
@@ -91,53 +110,68 @@ export function Sidebar() {
             </div>
             <nav className="space-y-1 px-3">
               {section.items.map((item) => {
-                const isActive = pathname === item.href
-                return item.href ? (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "w-full flex items-center h-10 px-3 text-sm font-medium rounded-md",
-                      isActive
-                        ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
-                        : "text-gray-700 hover:bg-gray-100"
+                const isExpanded = expandedItems.includes(item.name);
+                const isActive = pathname === item.href;
+
+                return (
+                  <div key={item.name} className="space-y-1">
+                    {/* Parent button */}
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        "w-full justify-start h-10 px-3 text-sm font-medium rounded-md flex items-center",
+                        isActive
+                          ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
+                          : "text-gray-700 hover:bg-gray-100"
+                      )}
+                      onClick={() => item.hasSubmenu && toggleExpanded(item.name)}
+                      asChild={!item.hasSubmenu ? true : undefined} // normal link
+                    >
+                      {!item.hasSubmenu ? (
+                        <Link href={item.href} className="flex-1 flex items-center">
+                          <item.icon className="mr-3 h-4 w-4" />
+                          <span className="flex-1 text-left">{item.name}</span>
+                        </Link>
+                      ) : (
+                        <>
+                          <item.icon className="mr-3 h-4 w-4" />
+                          <span className="flex-1 text-left">{item.name}</span>
+                          {item.hasSubmenu && (
+                            <ChevronDown
+                              className={cn(
+                                "h-4 w-4 transition-transform",
+                                isExpanded && "rotate-180"
+                              )}
+                            />
+                          )}
+                        </>
+                      )}
+                    </Button>
+
+                    {/* Submenu */}
+                    {item.submenu && isExpanded && (
+                      <div className="pl-8 flex flex-col gap-1">
+                        {item.submenu.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            href={sub.href}
+                            className={cn(
+                              "text-sm p-1 rounded hover:bg-gray-200",
+                              pathname === sub.href ? "bg-blue-50 text-blue-700" : "text-gray-700"
+                            )}
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
                     )}
-                  >
-                    <item.icon className="mr-3 h-4 w-4" />
-                    <span className="flex-1 text-left">{item.name}</span>
-                    {item.hasSubmenu && (
-                      <ChevronDown
-                        className={cn(
-                          "h-4 w-4 transition-transform",
-                          expandedItems.includes(item.name) && "rotate-180"
-                        )}
-                      />
-                    )}
-                  </Link>
-                ) : (
-                  <Button
-                    key={item.name}
-                    variant="ghost"
-                    className="w-full justify-start h-10 px-3 text-sm font-medium"
-                    onClick={() => item.hasSubmenu && toggleExpanded(item.name)}
-                  >
-                    <item.icon className="mr-3 h-4 w-4" />
-                    <span className="flex-1 text-left">{item.name}</span>
-                    {item.hasSubmenu && (
-                      <ChevronDown
-                        className={cn(
-                          "h-4 w-4 transition-transform",
-                          expandedItems.includes(item.name) && "rotate-180"
-                        )}
-                      />
-                    )}
-                  </Button>
-                )
+                  </div>
+                );
               })}
             </nav>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
