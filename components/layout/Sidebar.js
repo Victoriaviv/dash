@@ -28,7 +28,7 @@ const navigationItems = [
     title: "DASHBOARD",
     items: [
       { name: "Ecommerce", icon: ShoppingCart, href: "/Ecommerce" },
-      { name: "Project", icon: FolderOpen, href: "/project" },
+      { name: "Project", icon: FolderOpen, href: "/projects" },
       { name: "Marketing", icon: TrendingUp, href: "/marketing" },
       { name: "Analytic", icon: BarChart3, href: "/analytics" },
     ],

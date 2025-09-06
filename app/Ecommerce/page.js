@@ -140,6 +140,15 @@ const orders = [
   { id: "#91631", status: "Paid", date: "18/06/2022", customer: "Brittany Hale", amount: 142.0 },
 ];
 
+// Re-using the same data structure for countries
+const topCountries = [
+  { country: "United States", flag: "🇺🇸", percentage: 38.61, color: "bg-blue-600" },
+  { country: "Brazil", flag: "🇧🇷", percentage: 32.79, color: "bg-green-600" },
+  { country: "India", flag: "🇮🇳", percentage: 26.42, color: "bg-yellow-600" },
+  { country: "United Kingdom", flag: "🇬🇧", percentage: 17.42, color: "bg-purple-600" },
+  { country: "Turkey", flag: "🇹🇷", percentage: 12.85, color: "bg-red-600" },
+];
+
 const TARGET = 1800;
 const ACHIEVED = 1300;
 const targetPercent = Math.round((ACHIEVED / TARGET) * 100);
@@ -154,59 +163,136 @@ export default function EcommerceDashboard() {
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Overview */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Clickable KPI Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {Object.entries(metrics).map(([key, m]) => (
-                <div
-                  key={key}
-                  onClick={() => setSelectedMetric(key)}
-                  className={`cursor-pointer rounded-lg border p-4 flex items-center gap-4 transition ${
-                    selectedMetric === key
-                      ? "border-primary shadow-lg bg-muted/50"
-                      : "border-transparent hover:border-muted/50 hover:bg-muted/30"
-                  }`}
-                >
-                  <div className={`rounded-full p-3 ${m.bg} ${m.color}`}>
-                    {m.icon}
+        {/* Overview & Recent Orders */}
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          {/* Overview Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Clickable KPI Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Object.entries(metrics).map(([key, m]) => (
+                  <div
+                    key={key}
+                    onClick={() => setSelectedMetric(key)}
+                    className={`cursor-pointer rounded-lg border p-4 flex items-center gap-4 transition ${
+                      selectedMetric === key
+                        ? "border-primary shadow-lg bg-muted/50"
+                        : "border-transparent hover:border-muted/50 hover:bg-muted/30"
+                    }`}
+                  >
+                    <div className={`rounded-full p-3 ${m.bg} ${m.color}`}>
+                      {m.icon}
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-sm">{m.title}</p>
+                      <p className="text-xl font-bold">{m.value}</p>
+                      <p className={`text-xs ${m.color}`}>{m.change}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-muted-foreground text-sm">{m.title}</p>
-                    <p className="text-xl font-bold">{m.value}</p>
-                    <p className={`text-xs ${m.color}`}>{m.change}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* Chart */}
-            <div className="h-80 bg-muted rounded-lg p-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={metric.data}
-                  margin={{ top: 20, right: 24, left: 0, bottom: 0 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
-                    contentStyle={{
-                      background: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: 8,
-                    }}
-                  />
-                  <Line type="monotone" dataKey="value" stroke={metric.stroke} strokeWidth={3} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+              {/* Chart */}
+              <div className="h-80 bg-muted rounded-lg p-2">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={metric.data}
+                    margin={{ top: 20, right: 24, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                    <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                    <Tooltip
+                      contentStyle={{
+                        background: "hsl(var(--card))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: 8,
+                      }}
+                    />
+                    <Line type="monotone" dataKey="value" stroke={metric.stroke} strokeWidth={3} dot={false} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Top Countries Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Top countries</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col lg:flex-row items-center gap-6">
+                <div className="w-full lg:w-1/2 h-40 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <span className="text-gray-400">Map Component Placeholder</span>
+                </div>
+                <div className="w-full lg:w-1/2 space-y-4">
+                  {topCountries.map((c, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <span className="text-2xl">{c.flag}</span>
+                      <div className="flex-1">
+                        <p className="font-medium text-sm">{c.country}</p>
+                        <div className="w-full bg-muted rounded-full h-1.5">
+                          <div className={`h-1.5 rounded-full ${c.color}`} style={{ width: `${c.percentage}%` }}></div>
+                        </div>
+                      </div>
+                      <p className="text-sm font-medium">{c.percentage}%</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Orders Table */}
+          <Card>
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle>Recent Orders</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push("/order/list")}
+              >
+                View all
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="min-w-full table-auto">
+                  <thead>
+                    <tr className="text-left text-sm text-muted-foreground border-b">
+                      <th className="pb-2 pr-4">ORDER</th>
+                      <th className="pb-2 pr-4">STATUS</th>
+                      <th className="pb-2 pr-4">DATE</th>
+                      <th className="pb-2 pr-4">CUSTOMER</th>
+                      <th className="pb-2 pr-4">AMOUNT</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((o, i) => (
+                      <tr key={i} className="border-b text-sm">
+                        <td className="py-2 pr-4">{o.id}</td>
+                        <td className="py-2 pr-4">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            o.status === "Paid" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                          }`}>
+                            {o.status}
+                          </span>
+                        </td>
+                        <td className="py-2 pr-4">{o.date}</td>
+                        <td className="py-2 pr-4">{o.customer}</td>
+                        <td className="py-2 pr-4 font-medium">${o.amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Right Column */}
         <div className="flex flex-col gap-6">
@@ -256,12 +342,12 @@ export default function EcommerceDashboard() {
             <CardHeader className="flex-row items-center justify-between">
               <CardTitle>Top Products</CardTitle>
               <Button
-  variant="ghost"
-  size="sm"
-  onClick={() => router.push("/products/list")}
->
-  View all
-</Button>
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push("/products/list")}
+              >
+                View all
+              </Button>
             </CardHeader>
             <CardContent className="space-y-4">
               {topProducts.map((p, i) => (
@@ -282,44 +368,6 @@ export default function EcommerceDashboard() {
           </Card>
         </div>
       </div>
-
-      {/* Recent Orders Table */}
-      <Card>
-        <CardHeader className="flex items-center justify-between">
-          <CardTitle>Recent Orders</CardTitle>
-          <Button size="sm">View Orders</Button>
-        </CardHeader>
-        <CardContent>
-          <table className="w-full mt-2 border-collapse">
-            <thead>
-              <tr className="text-left text-sm text-muted-foreground border-b">
-                <th className="pb-2">ORDER</th>
-                <th className="pb-2">STATUS</th>
-                <th className="pb-2">DATE</th>
-                <th className="pb-2">CUSTOMER</th>
-                <th className="pb-2">AMOUNT</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((o, i) => (
-                <tr key={i} className="border-b text-sm hover:bg-muted/40">
-                  <td className="py-2">{o.id}</td>
-                  <td className="py-2">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      o.status === "Paid" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
-                    }`}>
-                      {o.status}
-                    </span>
-                  </td>
-                  <td className="py-2">{o.date}</td>
-                  <td className="py-2">{o.customer}</td>
-                  <td className="py-2 font-medium">${o.amount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
     </div>
   );
 }
