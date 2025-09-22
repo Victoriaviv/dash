@@ -249,7 +249,7 @@ export default function EcommerceDashboard() {
 
           {/* Recent Orders Table */}
           <Card>
-            <CardHeader className="flex items-center justify-between">
+            <CardHeader className="flex items-center justify-between ">
               <CardTitle>Recent Orders</CardTitle>
               <Button
                 variant="ghost"

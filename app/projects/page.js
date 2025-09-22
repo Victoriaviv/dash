@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 
 const tasksData = [
   { name: 'Unable to upload file', date: 'August 05', status: 'High' },
@@ -73,6 +74,18 @@ const ganttData = [
   },
 ];
 
+
+const scheduleData = {
+  "Sep 5 2025": [
+    { title: "Team Meeting", time: "09:00 AM", icon: "📅" },
+    { title: "Fix Search Bug", time: "11:00 AM", icon: "🛠️" },
+  ],
+  "Sep 20 2025": [
+    { title: "Authentication Issue Debug", time: "02:00 PM", icon: "🔐" },
+    { title: "Client Call", time: "04:00 PM", icon: "📞" },
+  ],
+};
+
 const GanttChart = ({ data }) => {
   return (
     <div className="overflow-x-auto min-w-full">
@@ -127,6 +140,9 @@ const GanttChart = ({ data }) => {
 };
 
 export default function ProjectDashboard() {
+  // ✅ NEW: state for selected date
+  const [selectedDate, setSelectedDate] = useState("Sep 5 2025")
+
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       <div className="container mx-auto p-6 md:p-12 space-y-8">
@@ -134,46 +150,45 @@ export default function ProjectDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {/* Overview Cards */}
           <div className="md:col-span-2 lg:col-span-3 bg-white p-6 rounded-lg shadow">
-  <div className="flex justify-between items-center mb-6">
-    <h3 className="text-lg font-semibold text-gray-800">Projects Overview</h3>
-    <button className="text-sm text-blue-600 px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors">
-      View all projects
-    </button>
-  </div>
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-    {/* Ongoing */}
-    <div className="flex items-center gap-4">
-      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-        <span className="text-xl">⚙️</span>
-      </div>
-      <div>
-        <p className="text-lg font-bold">12</p>
-        <p className="text-sm text-gray-500">Ongoing projects</p>
-      </div>
-    </div>
-    {/* Completed */}
-    <div className="flex items-center gap-4">
-      <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-        <span className="text-xl">✅</span>
-      </div>
-      <div>
-        <p className="text-lg font-bold">68</p>
-        <p className="text-sm text-gray-500">Projects completed</p>
-      </div>
-    </div>
-    {/* Upcoming */}
-    <div className="flex items-center gap-4">
-      <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
-        <span className="text-xl">🗓️</span>
-      </div>
-      <div>
-        <p className="text-lg font-bold">7</p>
-        <p className="text-sm text-gray-500">Upcoming projects</p>
-      </div>
-    </div>
-  </div>
-</div>
-
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-semibold text-gray-800">Projects Overview</h3>
+              <button className="text-sm text-blue-600 px-4 py-2 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors">
+                View all projects
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {/* Ongoing */}
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                  <span className="text-xl">⚙️</span>
+                </div>
+                <div>
+                  <p className="text-lg font-bold">12</p>
+                  <p className="text-sm text-gray-500">Ongoing projects</p>
+                </div>
+              </div>
+              {/* Completed */}
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-xl">✅</span>
+                </div>
+                <div>
+                  <p className="text-lg font-bold">68</p>
+                  <p className="text-sm text-gray-500">Projects completed</p>
+                </div>
+              </div>
+              {/* Upcoming */}
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                  <span className="text-xl">🗓️</span>
+                </div>
+                <div>
+                  <p className="text-lg font-bold">7</p>
+                  <p className="text-sm text-gray-500">Upcoming projects</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Calendar */}
           <div className="md:col-span-1 lg:col-span-1 bg-white p-6 rounded-lg shadow h-fit">
@@ -186,11 +201,21 @@ export default function ProjectDashboard() {
               {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map(day => <div key={day}>{day}</div>)}
             </div>
             <div className="grid grid-cols-7 gap-2 text-sm text-center">
-              {Array.from({ length: 30 }, (_, i) => (
-                <div key={i} className={`p-1 rounded cursor-pointer ${i === 5 ? 'bg-blue-600 text-white' : 'hover:bg-gray-200'}`}>
-                  {i + 1}
-                </div>
-              ))}
+              {Array.from({ length: 30 }, (_, i) => {
+                const day = i + 1
+                const dateKey = `Sep ${day} 2025`
+                return (
+                  <div
+                    key={i}
+                    onClick={() => setSelectedDate(dateKey)}
+                    className={`p-1 rounded cursor-pointer ${
+                      selectedDate === dateKey ? 'bg-blue-600 text-white' : 'hover:bg-gray-200'
+                    }`}
+                  >
+                    {day}
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
@@ -203,44 +228,19 @@ export default function ProjectDashboard() {
           </div>
 
           <div className="md:col-span-1 lg:col-span-1 bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-4">Schedule today</h3>
+            <h3 className="text-lg font-semibold mb-4">Schedule for {selectedDate}</h3>
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                  <span className="text-lg">📅</span>
+              {(scheduleData[selectedDate] || [{ title: "No events", time: "-", icon: "❌" }]).map((item, idx) => (
+                <div key={idx} className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                    <span className="text-lg">{item.icon}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800">{item.title}</p>
+                    <p className="text-xs text-gray-500">{item.time}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-800">Daily standup</p>
-                  <p className="text-xs text-gray-500">10:00 AM</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                  <span className="text-lg">☕</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800">Lunch break</p>
-                  <p className="text-xs text-gray-500">12:00 PM</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                  <span className="text-lg">📢</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800">Townhall Event</p>
-                  <p className="text-xs text-gray-500">03:00 PM</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                  <span className="text-lg">📝</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-800">Write daily report</p>
-                  <p className="text-xs text-gray-500">05:00 PM</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -325,7 +325,6 @@ export default function ProjectDashboard() {
           </div>
         </div>
 
-       
       </div>
     </div>
   );
